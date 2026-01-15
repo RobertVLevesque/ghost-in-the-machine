@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type GameStep = 'idle' | 'glyphHovered' | 'node1' | 'node2' | 'node3' | 'revealed';
+// Added 'scanning' and 'searching' steps
+export type GameStep = 'idle' | 'scanning' | 'searching' | 'node1' | 'node2' | 'revealed';
 
 interface GhostState {
   step: GameStep;
@@ -18,7 +19,11 @@ export const useGhostStore = create<GhostState>()(
       terminalActive: false,
       setStep: (step) => set({ step }),
       setTerminalActive: (active) => set({ terminalActive: active }),
-      reset: () => set({ step: 'idle', terminalActive: false }),
+      reset: () => {
+        localStorage.clear();
+        set({ step: 'idle', terminalActive: false });
+        window.location.reload();
+      },
     }),
     { name: 'ghost-storage' }
   )
