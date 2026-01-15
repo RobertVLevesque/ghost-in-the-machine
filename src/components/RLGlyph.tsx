@@ -6,7 +6,6 @@ export const RLGlyph = () => {
   const handleMouseEnter = () => {
     if (step === 'idle') {
       setStep('glyphHovered');
-      // Terminal pops up immediately now
       setTerminalActive(true);
     }
   };
@@ -14,12 +13,13 @@ export const RLGlyph = () => {
   return (
     <div 
       onMouseEnter={handleMouseEnter}
-      className="fixed top-8 left-8 z-[60] cursor-pointer group pointer-events-auto p-4"
+      // Added w-fit and h-fit to prevent blocking other elements
+      className="fixed top-8 left-8 z-[60] cursor-pointer group pointer-events-auto w-fit h-fit p-2"
     >
-      <div className="text-5xl font-black tracking-tighter opacity-20 group-hover:opacity-100 group-hover:text-red-600 transition-all duration-500 uppercase">
+      <div className="text-6xl font-black tracking-tighter opacity-10 group-hover:opacity-100 group-hover:text-red-600 transition-all duration-700 uppercase select-none">
         RL
       </div>
-      <div className="w-12 h-[2px] bg-white/10 group-hover:bg-red-600 mt-2 transition-all duration-500" />
+      <div className="w-8 h-[2px] bg-white/5 group-hover:bg-red-600 mt-1 transition-all duration-700" />
     </div>
   );
 };
