@@ -1,37 +1,32 @@
-// src/hooks/useSound.ts
 export const useSound = () => {
-  const playSound = (type: 'blip' | 'hum' | 'surge') => {
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+  const playSound = (freq: number, type: OscillatorType = 'square', duration = 0.1) => {
+    try {
+      const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext;
+      const ctx = new AudioContextClass();
+      
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
 
-    if (type === 'blip') {
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(880, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(10, ctx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.05, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-      osc.stop(ctx.currentTime + 0.1);
-    } else if (type === 'hum') {
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(110, ctx.currentTime);
-      gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.5);
-      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);
-      osc.stop(ctx.currentTime + 1.5);
-    } else { // surge
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(40, ctx.currentTime);
-      osc.frequency.linearRampToValueAtTime(440, ctx.currentTime + 0.5);
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+
       gain.gain.setValueAtTime(0.1, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5);
-      osc.stop(ctx.currentTime + 0.5);
-    }
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    } catch (e) {
+      console.error("Audio blocked by browser policy");
+    }
   };
 
-  return { playSound };
+  return { 
+    playBlip: () => playSound(880, 'square', 0.1),
+    playSurge: () => playSound(220, 'sawtooth', 0.4),
+    playHum: () => playSound(110, 'sine', 1.5)
+  };
 };
