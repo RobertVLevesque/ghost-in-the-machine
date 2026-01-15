@@ -1,19 +1,11 @@
 @import "tailwindcss";
 
-/* Keep your existing body and animation code below that line */
+:root {
+  background-color: #050505 !important;
+}
+
 body {
   margin: 0;
-  background-color: #050505;
+  background-color: #050505 !important;
   color: white;
-  overflow: hidden;
-  font-family: 'Courier New', Courier, monospace;
-}
-
-@keyframes circuit-flicker {
-  0%, 19%, 21%, 62%, 64%, 100% { opacity: 1; filter: drop-shadow(0 0 2px rgba(255,0,0,0.8)); }
-  20%, 63% { opacity: 0.3; filter: none; }
-}
-
-.animate-circuit-flicker {
-  animation: circuit-flicker 4s linear infinite;
 }
