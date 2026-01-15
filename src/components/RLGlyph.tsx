@@ -2,13 +2,15 @@ import { useGhostStore } from '../store/useGhostStore';
 import { useSound } from '../hooks/useSound';
 
 export const RLGlyph = () => {
-  const { step, setStep, setTerminalActive } = useGhostStore();
-  const { init, playHum } = useSound(); // Use the new names here
+  const step = useGhostStore((s) => s.step);
+  const setStep = useGhostStore((s) => s.setStep);
+  const setTerminalActive = useGhostStore((s) => s.setTerminalActive);
+  const { init, playHum } = useSound();
 
   const handleClick = () => {
     if (step === 'idle') {
-      init();      // Wake up the audio engine
-      playHum();   // Start the ominous hum
+      init();
+      playHum();
       setStep('scanning');
       setTerminalActive(true);
     }

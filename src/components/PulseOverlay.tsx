@@ -2,13 +2,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useGhostStore } from '../store/useGhostStore';
 
 export const PulseOverlay = () => {
+  // Explicitly typing the state 's'
   const lastActiveId = useGhostStore((s) => s.lastActiveId);
 
-  // Mapped start points (Ghost's feet)
   const starts: Record<number, { x: string, y: string }> = {
-    1: { x: "44%", y: "60%" }, // Left Foot
-    2: { x: "56%", y: "60%" }, // Right Foot
-    3: { x: "50%", y: "62%" }  // Center Foot
+    1: { x: "44%", y: "60%" },
+    2: { x: "56%", y: "60%" },
+    3: { x: "50%", y: "62%" }
   };
 
   const targets: Record<number, { x: string, y: string }> = {
@@ -20,11 +20,13 @@ export const PulseOverlay = () => {
   return (
     <div className="fixed inset-0 pointer-events-none z-[200]">
       <AnimatePresence>
-        {lastActiveId && (
+        {lastActiveId && targets[lastActiveId] && (
           <svg className="w-full h-full">
             <motion.line
-              x1={starts[lastActiveId].x} y1={starts[lastActiveId].y}
-              x2={targets[lastActiveId].x} y2={targets[lastActiveId].y}
+              x1={starts[lastActiveId].x} 
+              y1={starts[lastActiveId].y}
+              x2={targets[lastActiveId].x} 
+              y2={targets[lastActiveId].y}
               initial={{ pathLength: 0, opacity: 1 }}
               animate={{ pathLength: 1, opacity: [1, 1, 0] }}
               transition={{ duration: 0.5 }}
