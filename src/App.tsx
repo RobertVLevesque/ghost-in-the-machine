@@ -17,25 +17,29 @@ export default function App() {
 
       <div className="absolute inset-0 z-40 pointer-events-none">
         <AnimatePresence>
-          {/* Only show nodes if we have started scanning */}
           {step !== 'idle' && (
             <>
+              {/* NODE 1 */}
               <TriangleNode 
+                id={1}
                 position="top-40 left-40" 
-                // Visible if scanning OR if already found
                 isDiscoveryMode={step === 'scanning'}
                 isActive={step === 'node1' || step === 'node2' || step === 'revealed'} 
                 onClick={() => { if(step === 'searching') setStep('node1') }} 
               />
 
+              {/* NODE 2 */}
               <TriangleNode 
+                id={2}
                 position="top-20 right-40" 
                 isDiscoveryMode={step === 'scanning'}
                 isActive={step === 'node2' || step === 'revealed'} 
                 onClick={() => { if(step === 'node1') setStep('node2') }} 
               />
 
+              {/* NODE 3 */}
               <TriangleNode 
+                id={3}
                 position="bottom-20 right-20" 
                 isDiscoveryMode={step === 'scanning'}
                 isActive={step === 'revealed'} 
