@@ -8,4 +8,15 @@ body {
   margin: 0;
   background-color: #050505 !important;
   color: white;
+html, body {
+  /* Prevent scrolling and "rubber-banding" on mobile */
+  overscroll-behavior: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
+
+main {
+  /* Prevent double-tap to zoom from breaking the game */
+  touch-action: none;
+}}

@@ -11,11 +11,11 @@ export const PulseOverlay = () => {
     3: { x: "50%", y: "62%" }
   };
 
-  const targets: Record<number, { x: string, y: string }> = {
-    1: { x: "20%", y: "30%" },
-    2: { x: "80%", y: "15%" },
-    3: { x: "90%", y: "85%" }
-  };
+const targets: Record<number, { x: string, y: string }> = {
+  1: { x: "15%", y: "25%" }, // Adjusted for top-[20%] left-[10%]
+  2: { x: "85%", y: "15%" }, // Adjusted for top-[10%] right-[10%]
+  3: { x: "85%", y: "85%" }  // Adjusted for bottom-[15%] right-[10%]
+};
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[200]">

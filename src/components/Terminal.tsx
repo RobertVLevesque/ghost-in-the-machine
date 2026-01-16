@@ -34,12 +34,13 @@ export const Terminal = () => {
   }, [setStep]);
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="fixed bottom-10 left-10 w-80 p-6 border border-red-900/30 bg-black/95 font-mono z-[70]"
-    >
-      <motion.div animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 0.2 }} className="text-red-600 font-bold text-xs mb-4 tracking-widest">
+<motion.div 
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  // w-[calc(100vw-40px)] makes it full width minus margins on mobile
+  className="fixed bottom-6 left-5 right-5 md:left-10 md:w-80 p-4 md:p-6 border border-red-900/30 bg-black/95 font-mono z-[70] shadow-[0_0_30px_rgba(255,0,0,0.1)]"
+>
+      <motion.div animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 0.7 }} className="text-red-600 font-bold text-xs mb-4 tracking-widest">
         /** SYSTEM_OVERRIDE **/
       </motion.div>
 

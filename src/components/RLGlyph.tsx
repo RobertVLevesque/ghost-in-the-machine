@@ -21,7 +21,7 @@ export const RLGlyph = () => {
       onClick={handleClick} 
       className="fixed top-8 left-8 z-[110] p-4 bg-transparent border-none cursor-pointer group outline-none"
     >
-      <div className="text-7xl font-black tracking-tighter opacity-10 group-hover:opacity-100 group-hover:text-red-600 transition-all duration-700 uppercase select-none">
+      <div className="text-4xl md:text-7xl font-black tracking-tighter opacity-10 group-hover:opacity-100 group-hover:text-red-600 transition-all duration-700 uppercase select-none">
         RL
       </div>
     </button>

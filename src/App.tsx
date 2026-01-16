@@ -40,20 +40,29 @@ export default function App() {
         <AnimatePresence>
           {step !== 'idle' && (
             <>
-              <TriangleNode id={1} position="top-40 left-40" 
-                isDiscoveryMode={step === 'scanning'}
-                isActive={step !== 'searching' && step !== 'scanning'} 
-                onClick={() => { if(step === 'searching') setStep('node1') }} />
-              
-              <TriangleNode id={2} position="top-20 right-40" 
-                isDiscoveryMode={step === 'scanning'}
-                isActive={step === 'node2' || step === 'revealed'} 
-                onClick={() => { if(step === 'node1') setStep('node2') }} />
-              
-              <TriangleNode id={3} position="bottom-20 right-20" 
-                isDiscoveryMode={step === 'scanning'}
-                isActive={step === 'revealed'} 
-                onClick={() => { if(step === 'node2') setStep('revealed') }} />
+<TriangleNode 
+  id={1} 
+  position="top-[20%] left-[10%] md:top-40 md:left-40" 
+  isDiscoveryMode={step === 'scanning'}
+  isActive={step !== 'searching' && step !== 'scanning'} 
+  onClick={() => { if(step === 'searching') setStep('node1') }} 
+/>
+
+<TriangleNode 
+  id={2} 
+  position="top-[10%] right-[10%] md:top-20 md:right-40" 
+  isDiscoveryMode={step === 'scanning'}
+  isActive={step === 'node2' || step === 'revealed'} 
+  onClick={() => { if(step === 'node1') setStep('node2') }} 
+/>
+
+<TriangleNode 
+  id={3} 
+  position="bottom-[15%] right-[10%] md:bottom-20 md:right-20" 
+  isDiscoveryMode={step === 'scanning'}
+  isActive={step === 'revealed'} 
+  onClick={() => { if(step === 'node2') setStep('revealed') }} 
+/>
             </>
           )}
         </AnimatePresence>
