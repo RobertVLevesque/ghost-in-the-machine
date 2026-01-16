@@ -4,50 +4,45 @@ import { useGhostStore } from '../store/useGhostStore';
 
 export const GhostEntity = () => {
   const { step } = useGhostStore();
-  
-  // We use this local state to manage the CSS classes
-  const [activeClasses, setActiveClasses] = useState<string[]>([]);
+  const [nodeState, setNodeState] = useState(0);
 
-  // THIS IS THE REACT VERSION OF YOUR JS SNIPPET
   useEffect(() => {
-    if (step === 'node1') {
-      setActiveClasses(['node-1']);
-    } 
-    else if (step === 'node2') {
-      setActiveClasses(['node-1', 'node-2']);
-    } 
+    if (step === 'node1') setNodeState(1);
+    else if (step === 'node2') setNodeState(2);
     else if (step === 'revealed') {
-      setActiveClasses(['node-1', 'node-2']);
-      // Your requested 350ms delay for the analytic feel
-      const timer = setTimeout(() => {
-        setActiveClasses(['node-1', 'node-2', 'node-3']);
-      }, 350);
-      return () => clearTimeout(timer);
-    }
-    else if (step === 'idle') {
-      setActiveClasses([]);
-    }
+      setNodeState(2);
+      setTimeout(() => setNodeState(3), 350);
+    } else if (step === 'idle') setNodeState(0);
   }, [step]);
+
+  // Animation variants for the legs
+  const legVariants = {
+    idle: { y: 0, fill: "rgba(180, 255, 255, 0.4)", filter: "none" },
+    active: (id: number) => ({
+      y: nodeState >= id ? -15 : 0,
+      fill: nodeState >= id ? "rgba(180, 255, 255, 0.8)" : "rgba(180, 255, 255, 0.4)",
+      filter: nodeState >= id ? "drop-shadow(0 0 8px rgba(120, 255, 255, 0.8))" : "none",
+      transition: { type: "spring", stiffness: 100, damping: 15 }
+    })
+  };
 
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
       <motion.svg 
         id="ghost"
-        // This dynamically joins your classes (e.g., "ghost node-1 node-2")
-        className={`ghost w-[70vw] max-w-[280px] h-auto transition-all duration-1000 ${activeClasses.join(' ')}`}
+        className="w-[70vw] max-w-[280px] h-auto drop-shadow-[0_0_15px_rgba(120,255,255,0.3)]"
         viewBox="0 0 200 220"
         initial={{ opacity: 0 }}
         animate={{ opacity: step === 'idle' ? 0.05 : 1 }}
       >
-        {/* Rounded Spectral Head */}
+        {/* Main Body - Extended V142 to overlap the legs and remove the gap */}
         <path
           id="body"
-          className="ghost-main-body"
-          d="M100 20 C60 20, 45 55, 45 90 V140 H155 V90 C155 55, 140 20, 100 20Z"
+          d="M100 20 C60 20, 45 55, 45 90 V142 H155 V90 C155 55, 140 20, 100 20Z"
           fill="rgba(180, 255, 255, 0.4)"
         />
 
-        {/* The Eyes */}
+        {/* Eyes */}
         <g opacity={step === 'idle' ? 0 : 1}>
           <ellipse cx="85" cy="85" rx="6" ry="10" fill="#050505"/>
           <ellipse cx="115" cy="85" rx="6" ry="10" fill="#050505"/>
@@ -55,20 +50,26 @@ export const GhostEntity = () => {
           <circle cx="115" cy="85" r="1.5" fill="red" className="animate-pulse" />
         </g>
 
-        {/* The Legs - IDs match your CSS selectors exactly */}
-        <path id="leg-left" className="leg"
+        {/* Legs - Animated with Framer Motion variants */}
+        <motion.path 
+          id="leg-left" 
           d="M45 140 C45 165, 80 165, 80 140"
-          fill="rgba(180, 255, 255, 0.4)"
+          custom={1}
+          animate={legVariants.active(1)}
         />
 
-        <path id="leg-center" className="leg"
+        <motion.path 
+          id="leg-center" 
           d="M80 140 C80 165, 120 165, 120 140"
-          fill="rgba(180, 255, 255, 0.4)"
+          custom={2}
+          animate={legVariants.active(2)}
         />
 
-        <path id="leg-right" className="leg"
+        <motion.path 
+          id="leg-right" 
           d="M120 140 C120 165, 155 165, 155 140"
-          fill="rgba(180, 255, 255, 0.4)"
+          custom={3}
+          animate={legVariants.active(3)}
         />
       </motion.svg>
     </div>

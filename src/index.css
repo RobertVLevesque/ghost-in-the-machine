@@ -1,10 +1,13 @@
 @import "tailwindcss";
 
-/* ───────── SYSTEM DEFAULTS ───────── */
+/* ───────── CORE SYSTEM ───────── */
 
 :root {
+  --ghost-teal: rgba(180, 255, 255, 0.4);
+  --ghost-glow: rgba(120, 255, 255, 0.3);
+  --terminal-red: #ff0000;
+  --admin-green: #4af626;
   background-color: #050505;
-  color-scheme: dark;
 }
 
 * {
@@ -17,7 +20,7 @@ body {
   padding: 0;
   background-color: #050505;
   color: #ffffff;
-  /* Prevent mobile bounce and scrolling */
+  /* Lock the screen for that "OS" feel */
   overflow: hidden;
   position: fixed;
   width: 100%;
@@ -26,109 +29,109 @@ body {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-/* ───────── GHOST ENTITY CORE ───────── */
+/* ───────── GHOST ENTITY ───────── */
 
-.ghost {
-  /* Base spectral glow */
-  filter: drop-shadow(0 0 10px rgba(120, 255, 255, 0.25));
+#ghost {
+  /* Spectral bloom effect */
+  filter: drop-shadow(0 0 12px var(--ghost-glow));
   transition: filter 0.5s ease;
 }
 
-.ghost-main-body {
-  transition: fill 0.5s ease, stroke 0.5s ease;
-}
-
+/* Base style for legs - Framer Motion handles the 'y' movement */
 .leg {
-  transform-origin: top center;
-  transition: 
-    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-    filter 0.3s ease,
-    fill 0.3s ease;
+  fill: var(--ghost-teal);
+  transition: fill 0.3s ease, filter 0.3s ease;
 }
 
-/* Idle imbalance - makes it feel "haunted" even when doing nothing */
-#leg-left { transform: translateY(-2px); }
-#leg-center { transform: translateY(0); }
-#leg-right { transform: translateY(1px); }
-
-/* ───────── GHOST NODE STATES (JS Triggered) ───────── */
-
-/* Node 1 — Detection (Left leg lifts) */
-.ghost.node-1 #leg-left {
-  transform: translateY(-12px) !important;
-  fill: rgba(180, 255, 255, 0.7) !important;
-  filter: drop-shadow(0 0 8px rgba(120, 255, 255, 0.6));
+.ghost-main-body {
+  transition: fill 0.5s ease;
 }
 
-/* Node 2 — Correlation (Center leg lifts) */
-.ghost.node-2 #leg-center {
-  transform: translateY(-16px) !important;
-  fill: rgba(180, 255, 255, 0.7) !important;
-  filter: drop-shadow(0 0 10px rgba(120, 255, 255, 0.7));
+/* ───────── TERMINAL UI ───────── */
+
+.terminal-container {
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.05);
 }
 
-/* Node 3 — Confirmation (Right leg lifts after analytic delay) */
-.ghost.node-3 #leg-right {
-  transform: translateY(-14px) !important;
-  fill: rgba(180, 255, 255, 0.7) !important;
-  filter: drop-shadow(0 0 12px rgba(120, 255, 255, 0.8));
-}
-
-/* Final Reveal Bloom — Ghost reaches full opacity/glow */
-.ghost.node-3 {
-  filter: drop-shadow(0 0 20px rgba(160, 255, 255, 0.5));
-}
-
-/* ───────── VISUAL EFFECTS ───────── */
-
-/* Circuit Flicker Animation */
-@keyframes circuit-flicker {
-  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { 
-    opacity: 1; 
-  }
-  20%, 21.999%, 63%, 63.999%, 65%, 69.999% { 
-    opacity: 0.4;
-  }
-}
-
-.animate-circuit-flicker {
-  animation: circuit-flicker 4s linear infinite;
-}
-
-/* ───────── AUTHENTICATED VIEW (GREEN TERMINAL) ───────── */
-
-.authenticated-text {
-  color: #4af626;
-  text-shadow: 0 0 8px rgba(74, 246, 38, 0.5);
-}
-
-.crt-scanline {
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.1) 50%
-  );
-  background-size: 100% 4px;
-  z-index: 100;
-}
-
-/* ───────── UTILITIES ───────── */
-
-/* Prevent text selection during gameplay */
-.select-none {
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* Surgical terminal cursor */
 .terminal-cursor {
   display: inline-block;
   width: 8px;
-  height: 15px;
-  background-color: #ff0000;
+  height: 1.2em;
+  background-color: var(--terminal-red);
+  margin-left: 4px;
   animation: blink 1s step-end infinite;
   vertical-align: middle;
 }
 
 @keyframes blink {
   50% { opacity: 0; }
+}
+
+/* ───────── VISUAL OVERLAYS ───────── */
+
+/* The CRT Scanline horizontal grid */
+.scanline-overlay {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.15) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+/* Atmospheric flicker for the Ghost */
+@keyframes circuit-flicker {
+  0%, 19.9%, 22%, 62.9%, 64%, 64.9%, 70%, 100% { opacity: 1; }
+  20%, 21.9%, 63%, 63.9%, 65%, 69.9% { opacity: 0.6; }
+}
+
+.animate-flicker {
+  animation: circuit-flicker 6s linear infinite;
+}
+
+/* ───────── AUTHENTICATED (GREEN) VIEW ───────── */
+
+.admin-mode {
+  background-color: #0a0f0a;
+  color: var(--admin-green);
+}
+
+.admin-text {
+  color: var(--admin-green);
+  text-shadow: 0 0 8px rgba(74, 246, 38, 0.6);
+}
+
+.admin-border {
+  border-color: rgba(74, 246, 38, 0.3);
+}
+
+/* ───────── UTILITIES ───────── */
+
+.select-none {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Pulse animation for red eyes */
+.eye-glow {
+  animation: eye-pulse 2s ease-in-out infinite;
+}
+
+@keyframes eye-pulse {
+  0%, 100% { opacity: 1; filter: brightness(1); }
+  50% { opacity: 0.5; filter: brightness(0.5); }
+}
+
+/* Ensure buttons don't show a grey box on mobile click */
+button {
+  outline: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
