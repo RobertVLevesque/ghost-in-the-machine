@@ -1,47 +1,31 @@
 /* src/index.css */
-@import "tailwindcss";
-
-/* ... existing body styles ... */
-
-.ghost-container {
-  filter: drop-shadow(0 0 15px rgba(120, 255, 255, 0.3));
+.ghost {
+  filter: drop-shadow(0 0 10px rgba(120,255,255,0.25));
+  transition: filter 0.5s ease;
 }
 
 .leg {
   transform-origin: top center;
-  transition: 
-    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-    fill 0.3s ease,
-    filter 0.3s ease;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease;
 }
 
-/* Base Idle Imbalance */
-#leg-left { transform: translateY(-2px); }
-#leg-center { transform: translateY(0); }
-#leg-right { transform: translateY(1px); }
-
-/* Node 1 — Detection */
-.step-node1 #leg-left {
-  transform: translateY(-12px);
-  fill: rgba(180, 255, 255, 0.9);
-  filter: drop-shadow(0 0 8px rgba(120, 255, 255, 0.8));
+/* NODE STATES */
+.ghost.node-1 #leg-left {
+  transform: translateY(-12px) !important;
+  filter: drop-shadow(0 0 8px rgba(120,255,255,0.6));
 }
 
-/* Node 2 — Correlation */
-.step-node2 #leg-center {
-  transform: translateY(-16px);
-  fill: rgba(180, 255, 255, 0.9);
-  filter: drop-shadow(0 0 10px rgba(120, 255, 255, 0.8));
+.ghost.node-2 #leg-center {
+  transform: translateY(-16px) !important;
+  filter: drop-shadow(0 0 10px rgba(120,255,255,0.7));
 }
 
-/* Node 3 (Revealed) — Confirmation */
-.step-revealed #leg-right {
-  transform: translateY(-14px);
-  fill: rgba(180, 255, 255, 0.9);
-  filter: drop-shadow(0 0 12px rgba(120, 255, 255, 0.9));
+.ghost.node-3 #leg-right {
+  transform: translateY(-14px) !important;
+  filter: drop-shadow(0 0 12px rgba(120,255,255,0.8));
 }
 
-.step-revealed .ghost-main-body {
-  fill: rgba(200, 255, 255, 0.8);
-  filter: drop-shadow(0 0 20px rgba(160, 255, 255, 0.5));
+/* Final Reveal Bloom */
+.ghost.node-3 {
+  filter: drop-shadow(0 0 20px rgba(160,255,255,0.6));
 }
