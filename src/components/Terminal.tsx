@@ -10,8 +10,8 @@ export const Terminal = () => {
 
   useEffect(() => {
     const t1 = "I SEE YOU.";
-    const t2 = "TRACE INITIATED...";
-    const t3 = "LOCATING NODES 1-3...";
+    const t2 = "TRACING INITIATED...";
+    const t3 = "LOCATE NODES 1-3...";
 
     // Typewriter Sequence
     let i = 0;

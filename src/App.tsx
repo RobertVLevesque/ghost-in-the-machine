@@ -45,7 +45,7 @@ export default function App() {
           "none"
         ] 
       } : {}}
-      transition={isGlitching ? { duration: 0.2, repeat: 7 } : {}}
+      transition={isGlitching ? { duration: 0.4, repeat: 7 } : {}}
       className="relative w-full h-[100dvh] bg-[#050505] overflow-hidden cursor-crosshair touch-none"
     >
       {/* Visual Overlay: CRT Scanlines */}
