@@ -32,17 +32,50 @@ body {
 /* ───────── GHOST ENTITY ───────── */
 
 #ghost {
-  /* Spectral bloom effect */
-  filter: drop-shadow(0 0 12px var(--ghost-glow));
-  transition: filter 0.5s ease;
+  filter: drop-shadow(0 0 12px rgba(120, 255, 255, 0.3));
 }
 
-/* Base style for legs - Framer Motion handles the 'y' movement */
-.leg {
-  fill: var(--ghost-teal);
-  transition: fill 0.3s ease, filter 0.3s ease;
+
+/* Base style for legs */
+.leg, #body {
+  /* Use 'fill' transition for the color change, 
+     but let Framer Motion handle the movement (transform) */
+  transition: fill 0.3s ease;
+  fill: rgba(180, 255, 255, 0.4);
+}
+/* Subtle idle floating animation for the whole SVG */
+.animate-flicker {
+  animation: hover-float 4s ease-in-out infinite;
 }
 
+@keyframes hover-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* High-frequency terminal blink */
+.terminal-cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.2em;
+  background-color: #ff0000;
+  animation: cursor-blink 0.8s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  50% { opacity: 0; }
+}
+
+/* Red eye pulse */
+.eye-glow {
+  fill: #ff0000;
+  animation: eye-bloom 2s ease-in-out infinite;
+}
+
+@keyframes eye-bloom {
+  0%, 100% { opacity: 0.8; r: 1.5; }
+  50% { opacity: 1; r: 2.2; }
+}
 .ghost-main-body {
   transition: fill 0.5s ease;
 }
