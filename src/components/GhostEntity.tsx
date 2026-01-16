@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useGhostStore } from '../store/useGhostStore';
 
 export const GhostEntity = () => {
@@ -15,24 +15,32 @@ export const GhostEntity = () => {
     } else if (step === 'idle') setNodeState(0);
   }, [step]);
 
-  // High-frequency glitch animation for activation
-  const activationGlitch = {
-    opacity: [1, 0.4, 0.9, 0.2, 1],
-    x: [0, -2, 2, -1, 0],
-    filter: [
-      "drop-shadow(0 0 0px rgba(120,255,255,0))",
-      "drop-shadow(0 0 15px rgba(120,255,255,1))",
-      "drop-shadow(0 0 5px rgba(120,255,255,0.5))"
-    ],
-    transition: { duration: 0.3 }
+  // Framer Motion Variants - Solves the TypeScript Error
+  const legVariants: Variants = {
+    idle: { 
+      y: 0, 
+      fill: "rgba(180, 255, 255, 0.4)",
+      opacity: 1
+    },
+    lifted: { 
+      y: -18, 
+      fill: "rgba(200, 255, 255, 0.8)",
+      opacity: 1,
+      transition: { type: "spring", stiffness: 120, damping: 12 }
+    },
+    glitch: {
+      opacity: [1, 0.2, 0.9, 0.3, 1],
+      x: [0, -3, 3, -1, 0],
+      fill: "rgba(255, 255, 255, 1)",
+      transition: { duration: 0.3 }
+    }
   };
 
-  const legVariants = {
-    active: (id: number) => ({
-      y: nodeState >= id ? -18 : 0, // Lift higher for more impact
-      fill: nodeState >= id ? "rgba(200, 255, 255, 0.8)" : "rgba(180, 255, 255, 0.4)",
-      transition: { type: "spring", stiffness: 120, damping: 10 }
-    })
+  // Helper to determine which variant to play
+  const getVariant = (id: number) => {
+    if (lastActiveId === id) return "glitch";
+    if (nodeState >= (id === 3 ? 3 : id)) return "lifted"; // Node 3 is triggered by 'revealed'
+    return "idle";
   };
 
   return (
@@ -44,10 +52,11 @@ export const GhostEntity = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: step === 'idle' ? 0.05 : 1 }}
       >
-        {/* BODY: V148 creates an 8px overlap into the legs at 140, killing the gap */}
+        {/* BODY: V160 provides a massive overlap. 
+            Even when the legs lift -18px, they will stay tucked behind the body. */}
         <path
           id="body"
-          d="M100 20 C60 20, 45 55, 45 90 V148 H155 V90 C155 55, 140 20, 100 20Z"
+          d="M100 20 C60 20, 45 55, 45 90 V160 H155 V90 C155 55, 140 20, 100 20Z"
           fill="rgba(180, 255, 255, 0.4)"
         />
 
@@ -55,27 +64,30 @@ export const GhostEntity = () => {
         <g opacity={step === 'idle' ? 0 : 1}>
           <ellipse cx="85" cy="85" rx="6" ry="10" fill="#050505"/>
           <ellipse cx="115" cy="85" rx="6" ry="10" fill="#050505"/>
-          <circle cx="85" cy="85" r="1.5" fill="red" className="eye-glow" />
-          <circle cx="115" cy="85" r="1.5" fill="red" className="eye-glow" />
+          <circle cx="85" cy="85" r="1.5" className="eye-glow" />
+          <circle cx="115" cy="85" r="1.5" className="eye-glow" />
         </g>
 
-        {/* LEGS: They now listen for lastActiveId to trigger the glitch flicker */}
+        {/* LEGS */}
         <motion.path 
           id="leg-left" 
           d="M45 140 C45 165, 80 165, 80 140"
-          animate={lastActiveId === 1 ? activationGlitch : legVariants.active(1)}
+          variants={legVariants}
+          animate={getVariant(1)}
         />
 
         <motion.path 
           id="leg-center" 
           d="M80 140 C80 165, 120 165, 120 140"
-          animate={lastActiveId === 3 ? activationGlitch : legVariants.active(2)}
+          variants={legVariants}
+          animate={getVariant(3)} // Mapped to Node 3
         />
 
         <motion.path 
           id="leg-right" 
           d="M120 140 C120 165, 155 165, 155 140"
-          animate={lastActiveId === 2 ? activationGlitch : legVariants.active(3)}
+          variants={legVariants}
+          animate={getVariant(2)} // Mapped to Node 2
         />
       </motion.svg>
     </div>
