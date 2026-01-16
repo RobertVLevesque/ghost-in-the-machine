@@ -2,37 +2,94 @@ import { motion } from 'framer-motion';
 import { useGhostStore } from '../store/useGhostStore';
 
 export const GhostEntity = () => {
-  const step = useGhostStore((s) => s.step);
-  const lastActiveId = useGhostStore((s) => s.lastActiveId);
+  const { step, lastActiveId } = useGhostStore();
+  const isRevealed = step === 'revealed';
+  const isSearching = step !== 'idle' && step !== 'authenticated';
 
   return (
-<div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 p-4">
-  <motion.svg 
-    // Responsive width: 80% of screen on mobile, max 400px on desktop
-    className="w-[80vw] max-w-[400px] h-auto drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]"
-    viewBox="0 0 100 120"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: step === 'idle' ? 0.05 : 1 }}
-  >
-        <motion.path 
-          d="M20,40 A30,30 0 0,1 80,40 V70 L85,75 L85,85 L75,75 V70 H25 V75 L15,85 L15,75 L20,70 Z" 
-          fill="none" 
-          stroke="white" 
-          strokeWidth="0.5"
-          animate={lastActiveId ? { stroke: "#ff0000", strokeWidth: 1.2 } : { stroke: "white", strokeWidth: 0.5 }}
-        />
-        
-        <g opacity={step === 'idle' ? 0 : 1}>
-          <circle cx="38" cy="45" r="5" stroke="white" strokeWidth="0.2" fill="black" />
-          <circle cx="62" cy="45" r="5" stroke="white" strokeWidth="0.2" fill="black" />
-          <circle cx="38" cy="45" r="1.5" fill="red" className="animate-pulse" />
-          <circle cx="62" cy="45" r="1.5" fill="red" className="animate-pulse" />
-          <ellipse cx="50" cy="60" rx="4" ry="6" stroke="white" strokeWidth="0.2" fill="black" />
-        </g>
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 p-4">
+      <motion.svg 
+        className="w-[70vw] max-w-[300px] h-auto"
+        viewBox="0 0 200 240"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: step === 'idle' ? 0.05 : 1 }}
+        transition={{ duration: 1 }}
+      >
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
 
-        <path d="M35,70 V85 L25,100" stroke={lastActiveId === 1 ? "red" : "white"} strokeWidth="0.5" fill="none" />
-        <path d="M50,70 V105" stroke={lastActiveId === 3 ? "red" : "white"} strokeWidth="0.5" fill="none" />
-        <path d="M65,70 V85 L75,100" stroke={lastActiveId === 2 ? "red" : "white"} strokeWidth="0.5" fill="none" />
+        {/* --- BODY --- */}
+        <motion.path
+          d="M100 20 C60 20, 45 55, 45 90 V140 C45 165, 155 165, 155 140 V90 C155 55, 140 20, 100 20Z"
+          fill={lastActiveId ? "rgba(255, 0, 0, 0.4)" : "rgba(180, 255, 255, 0.2)"}
+          stroke={lastActiveId ? "red" : "rgba(180, 255, 255, 0.9)"}
+          strokeWidth="1"
+          animate={lastActiveId ? { scale: 1.02 } : { scale: 1 }}
+          filter="url(#glow)"
+          className="transition-colors duration-300"
+        />
+
+        {/* --- EYES --- */}
+        {/* If idle, eyes are dark. If active, eyes glow red. */}
+        <ellipse cx="85" cy="85" rx="6" ry="10" fill="#0b1f26" />
+        <ellipse cx="115" cy="85" rx="6" ry="10" fill="#0b1f26" />
+        
+        {isSearching && (
+          <g>
+            <motion.circle 
+              cx="85" cy="85" r="3" fill="red" 
+              animate={{ opacity: [0.5, 1, 0.5] }} 
+              transition={{ repeat: Infinity, duration: 1.5 }}
+            />
+            <motion.circle 
+              cx="115" cy="85" r="3" fill="red" 
+              animate={{ opacity: [0.5, 1, 0.5] }} 
+              transition={{ repeat: Infinity, duration: 1.5 }}
+            />
+          </g>
+        )}
+
+        {/* --- LEGS --- */}
+        {/* LEFT LEG (Linked to Node 1) */}
+        <motion.path
+          d="M70 140 C65 165, 65 190, 55 205"
+          stroke={lastActiveId === 1 ? "red" : "rgba(160, 255, 255, 0.85)"}
+          strokeWidth="4"
+          strokeLinecap="round"
+          fill="none"
+          animate={lastActiveId === 1 ? { strokeWidth: 8 } : { strokeWidth: 4 }}
+        />
+        <circle cx="55" cy="205" r="3" fill={lastActiveId === 1 ? "red" : "rgba(160, 255, 255, 0.9)"} />
+
+        {/* CENTER LEG (Linked to Node 3) */}
+        <motion.path
+          d="M100 140 C100 170, 100 195, 100 215"
+          stroke={lastActiveId === 3 ? "red" : "rgba(160, 255, 255, 0.9)"}
+          strokeWidth="4"
+          strokeLinecap="round"
+          fill="none"
+          animate={lastActiveId === 3 ? { strokeWidth: 8 } : { strokeWidth: 4 }}
+        />
+        <circle cx="100" cy="215" r="3" fill={lastActiveId === 3 ? "red" : "rgba(160, 255, 255, 0.9)"} />
+
+        {/* RIGHT LEG (Linked to Node 2) */}
+        <motion.path
+          d="M130 140 C135 165, 140 185, 150 205"
+          stroke={lastActiveId === 2 ? "red" : "rgba(160, 255, 255, 0.8)"}
+          strokeWidth="4"
+          strokeLinecap="round"
+          fill="none"
+          animate={lastActiveId === 2 ? { strokeWidth: 8 } : { strokeWidth: 4 }}
+        />
+        <circle cx="150" cy="205" r="3" fill={lastActiveId === 2 ? "red" : "rgba(160, 255, 255, 0.9)"} />
+        
       </motion.svg>
     </div>
   );
