@@ -50,7 +50,7 @@ export default function App() {
 
 <TriangleNode 
   id={2} 
-  position="top-[10%] right-[10%] md:top-20 md:right-40" 
+  position="top-[20%] right-[10%] md:top-30 md:right-40" 
   isDiscoveryMode={step === 'scanning'}
   isActive={step === 'node2' || step === 'revealed'} 
   onClick={() => { if(step === 'node1') setStep('node2') }} 
