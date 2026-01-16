@@ -3,7 +3,6 @@ import { useGhostStore } from '../store/useGhostStore';
 
 export const GhostEntity = () => {
   const { step, lastActiveId } = useGhostStore();
-  const isRevealed = step === 'revealed';
   const isSearching = step !== 'idle' && step !== 'authenticated';
 
   return (
@@ -37,7 +36,6 @@ export const GhostEntity = () => {
         />
 
         {/* --- EYES --- */}
-        {/* If idle, eyes are dark. If active, eyes glow red. */}
         <ellipse cx="85" cy="85" rx="6" ry="10" fill="#0b1f26" />
         <ellipse cx="115" cy="85" rx="6" ry="10" fill="#0b1f26" />
         
@@ -57,7 +55,7 @@ export const GhostEntity = () => {
         )}
 
         {/* --- LEGS --- */}
-        {/* LEFT LEG (Linked to Node 1) */}
+        {/* LEFT LEG */}
         <motion.path
           d="M70 140 C65 165, 65 190, 55 205"
           stroke={lastActiveId === 1 ? "red" : "rgba(160, 255, 255, 0.85)"}
@@ -68,7 +66,7 @@ export const GhostEntity = () => {
         />
         <circle cx="55" cy="205" r="3" fill={lastActiveId === 1 ? "red" : "rgba(160, 255, 255, 0.9)"} />
 
-        {/* CENTER LEG (Linked to Node 3) */}
+        {/* CENTER LEG */}
         <motion.path
           d="M100 140 C100 170, 100 195, 100 215"
           stroke={lastActiveId === 3 ? "red" : "rgba(160, 255, 255, 0.9)"}
@@ -79,7 +77,7 @@ export const GhostEntity = () => {
         />
         <circle cx="100" cy="215" r="3" fill={lastActiveId === 3 ? "red" : "rgba(160, 255, 255, 0.9)"} />
 
-        {/* RIGHT LEG (Linked to Node 2) */}
+        {/* RIGHT LEG */}
         <motion.path
           d="M130 140 C135 165, 140 185, 150 205"
           stroke={lastActiveId === 2 ? "red" : "rgba(160, 255, 255, 0.8)"}
@@ -89,7 +87,6 @@ export const GhostEntity = () => {
           animate={lastActiveId === 2 ? { strokeWidth: 8 } : { strokeWidth: 4 }}
         />
         <circle cx="150" cy="205" r="3" fill={lastActiveId === 2 ? "red" : "rgba(160, 255, 255, 0.9)"} />
-        
       </motion.svg>
     </div>
   );
