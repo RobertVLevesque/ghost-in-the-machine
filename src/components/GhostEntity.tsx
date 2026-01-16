@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
+// Notice the 'type' keyword below - this fixes the Vercel error
+import type { Variants } from 'framer-motion';
 import { useGhostStore } from '../store/useGhostStore';
 
 export const GhostEntity = () => {
@@ -15,7 +17,7 @@ export const GhostEntity = () => {
     } else if (step === 'idle') setNodeState(0);
   }, [step]);
 
-  // Framer Motion Variants - Solves the TypeScript Error
+  // Defined with the explicit type to satisfy TS
   const legVariants: Variants = {
     idle: { 
       y: 0, 
@@ -36,10 +38,11 @@ export const GhostEntity = () => {
     }
   };
 
-  // Helper to determine which variant to play
   const getVariant = (id: number) => {
     if (lastActiveId === id) return "glitch";
-    if (nodeState >= (id === 3 ? 3 : id)) return "lifted"; // Node 3 is triggered by 'revealed'
+    // Center leg (ID 3) is the last one in the logic chain
+    if (id === 3 && nodeState >= 3) return "lifted";
+    if (id !== 3 && nodeState >= id) return "lifted";
     return "idle";
   };
 
@@ -52,8 +55,7 @@ export const GhostEntity = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: step === 'idle' ? 0.05 : 1 }}
       >
-        {/* BODY: V160 provides a massive overlap. 
-            Even when the legs lift -18px, they will stay tucked behind the body. */}
+        {/* OVERLAPPING BODY: Gap is eliminated by V160 extension */}
         <path
           id="body"
           d="M100 20 C60 20, 45 55, 45 90 V160 H155 V90 C155 55, 140 20, 100 20Z"
@@ -80,14 +82,14 @@ export const GhostEntity = () => {
           id="leg-center" 
           d="M80 140 C80 165, 120 165, 120 140"
           variants={legVariants}
-          animate={getVariant(3)} // Mapped to Node 3
+          animate={getVariant(3)} 
         />
 
         <motion.path 
           id="leg-right" 
           d="M120 140 C120 165, 155 165, 155 140"
           variants={legVariants}
-          animate={getVariant(2)} // Mapped to Node 2
+          animate={getVariant(2)}
         />
       </motion.svg>
     </div>
