@@ -6,9 +6,9 @@ export const PulseOverlay = () => {
   const lastActiveId = useGhostStore((s) => s.lastActiveId);
 
   const starts: Record<number, { x: string, y: string }> = {
-    1: { x: "44%", y: "60%" },
-    2: { x: "56%", y: "60%" },
-    3: { x: "50%", y: "62%" }
+    1: { x: "44%", y: "58%" }, // Matches Left Foot Circle
+    2: { x: "56%", y: "58%" }, // Matches Right Foot Circle
+    3: { x: "50%", y: "61%" }  // Matches Center Foot Circle
   };
 
 const targets: Record<number, { x: string, y: string }> = {

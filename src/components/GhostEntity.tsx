@@ -46,52 +46,63 @@ export const GhostEntity = () => {
     return "idle";
   };
 
-  return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+    return (
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 p-4">
       <motion.svg 
-        id="ghost"
-        className="w-[70vw] max-w-[280px] h-auto animate-flicker"
-        viewBox="0 0 200 220"
+        className="w-[75vw] max-w-[320px] h-auto neon-glow"
+        viewBox="0 0 200 240"
         initial={{ opacity: 0 }}
         animate={{ opacity: step === 'idle' ? 0.05 : 1 }}
       >
-        {/* OVERLAPPING BODY: Gap is eliminated by V160 extension */}
+        {/* BODY - Double Layer for Glow */}
         <path
-          id="body"
           d="M100 20 C60 20, 45 55, 45 90 V160 H155 V90 C155 55, 140 20, 100 20Z"
-          fill="rgba(180, 255, 255, 0.4)"
+          fill="rgba(180, 255, 255, 0.15)"
+          stroke="rgba(180, 255, 255, 0.8)"
+          strokeWidth="0.5"
         />
 
         {/* EYES */}
         <g opacity={step === 'idle' ? 0 : 1}>
-          <ellipse cx="85" cy="85" rx="6" ry="10" fill="#050505"/>
-          <ellipse cx="115" cy="85" rx="6" ry="10" fill="#050505"/>
-          <circle cx="85" cy="85" r="1.5" className="eye-glow" />
-          <circle cx="115" cy="85" r="1.5" className="eye-glow" />
+          <ellipse cx="85" cy="85" rx="6" ry="10" fill="#050505" />
+          <ellipse cx="115" cy="85" rx="6" ry="10" fill="#050505" />
+          <motion.circle 
+            cx="85" cy="85" r="2" fill="#ff0000" 
+            animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.2, 1] }} 
+            transition={{ repeat: Infinity, duration: 2 }}
+          />
+          <motion.circle 
+            cx="115" cy="85" r="2" fill="#ff0000" 
+            animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.2, 1] }} 
+            transition={{ repeat: Infinity, duration: 2 }}
+          />
         </g>
 
-        {/* LEGS */}
-        <motion.path 
-          id="leg-left" 
-          d="M45 140 C45 165, 80 165, 80 140"
-          variants={legVariants}
-          animate={getVariant(1)}
-        />
+        {/* --- NEON TUBE LEGS --- */}
+        {/* Left Leg */}
+        <motion.g variants={legVariants} animate={lastActiveId === 1 ? "glitch" : step.includes('node') || step === 'revealed' ? "lifted" : "idle"}>
+          {/* Outer Glow Path */}
+          <path d="M70 140 C65 165, 65 190, 55 205" fill="none" stroke="rgba(180, 255, 255, 0.3)" strokeWidth="6" strokeLinecap="round" />
+          {/* Inner Bright Tube */}
+          <path d="M70 140 C65 165, 65 190, 55 205" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" className="animate-tube" />
+          <circle cx="55" cy="205" r="3" fill="#fff" className="neon-glow" />
+        </motion.g>
 
-        <motion.path 
-          id="leg-center" 
-          d="M80 140 C80 165, 120 165, 120 140"
-          variants={legVariants}
-          animate={getVariant(3)} 
-        />
+        {/* Center Leg */}
+        <motion.g variants={legVariants} animate={lastActiveId === 3 ? "glitch" : step === 'revealed' ? "lifted" : "idle"}>
+          <path d="M100 140 C100 170, 100 195, 100 215" fill="none" stroke="rgba(180, 255, 255, 0.3)" strokeWidth="6" strokeLinecap="round" />
+          <path d="M100 140 C100 170, 100 195, 100 215" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" className="animate-tube" />
+          <circle cx="100" cy="215" r="3" fill="#fff" className="neon-glow" />
+        </motion.g>
 
-        <motion.path 
-          id="leg-right" 
-          d="M120 140 C120 165, 155 165, 155 140"
-          variants={legVariants}
-          animate={getVariant(2)}
-        />
+        {/* Right Leg */}
+        <motion.g variants={legVariants} animate={lastActiveId === 2 ? "glitch" : step.includes('node2') || step === 'revealed' ? "lifted" : "idle"}>
+          <path d="M130 140 C135 165, 140 185, 150 205" fill="none" stroke="rgba(180, 255, 255, 0.3)" strokeWidth="6" strokeLinecap="round" />
+          <path d="M130 140 C135 165, 140 185, 150 205" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" className="animate-tube" />
+          <circle cx="150" cy="205" r="3" fill="#fff" className="neon-glow" />
+        </motion.g>
       </motion.svg>
     </div>
   );
+};
 };

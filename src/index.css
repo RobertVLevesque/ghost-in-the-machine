@@ -5,9 +5,12 @@
 :root {
   --ghost-teal: rgba(180, 255, 255, 0.4);
   --ghost-glow: rgba(120, 255, 255, 0.3);
+  --neon-teal: #b4ffff;
+  --neon-glow: rgba(120, 255, 255, 0.6);
   --terminal-red: #ff0000;
   --admin-green: #4af626;
   background-color: #050505;
+  
 }
 
 * {
@@ -46,11 +49,23 @@ body {
 /* Subtle idle floating animation for the whole SVG */
 .animate-flicker {
   animation: hover-float 4s ease-in-out infinite;
+.neon-glow {
+  filter: drop-shadow(0 0 2px #fff) 
+          drop-shadow(0 0 5px var(--neon-glow)) 
+          drop-shadow(0 0 15px var(--neon-glow));
 }
 
 @keyframes hover-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
+}
+@keyframes tube-pulse {
+  0%, 100% { opacity: 1; stroke-width: 1.5; }
+  50% { opacity: 0.7; stroke-width: 1.2; }
+}
+
+.animate-tube {
+  animation: tube-pulse 2s ease-in-out infinite;
 }
 
 /* High-frequency terminal blink */
