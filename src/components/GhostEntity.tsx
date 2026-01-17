@@ -105,4 +105,3 @@ export const GhostEntity = () => {
     </div>
   );
 };
-};
